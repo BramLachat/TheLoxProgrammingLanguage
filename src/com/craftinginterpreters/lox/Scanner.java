@@ -49,7 +49,7 @@ public class Scanner {
     }
 
     private void scanToken() {
-        char c = advance();
+        char c = moveToNextChar();
         switch (c) {
             case '(': addToken(TokenType.LEFT_PAREN); break;
             case ')': addToken(TokenType.RIGHT_PAREN); break;
@@ -62,21 +62,21 @@ public class Scanner {
             case ';': addToken(TokenType.SEMICOLON); break;
             case '*': addToken(TokenType.STAR); break;
             case '!':
-                addToken(match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
+                addToken(isCurrentCharEqualTo('=') ? TokenType.BANG_EQUAL : TokenType.BANG);
                 break;
             case '=':
-                addToken(match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
+                addToken(isCurrentCharEqualTo('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);
                 break;
             case '<':
-                addToken(match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
+                addToken(isCurrentCharEqualTo('=') ? TokenType.LESS_EQUAL : TokenType.LESS);
                 break;
             case '>':
-                addToken(match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
+                addToken(isCurrentCharEqualTo('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER);
                 break;
             case '/':
-                if (match('/')) {
+                if (isCurrentCharEqualTo('/')) {
                     // A comment goes until the end of the line.
-                    while (peek() != '\n' && !isAtEnd()) advance();
+                    while (getCurrentChar() != '\n' && !isAtEnd()) moveToNextChar();
                 } else {
                     addToken(TokenType.SLASH);
                 }
@@ -101,7 +101,7 @@ public class Scanner {
     }
 
     private void identifier() {
-        while (isAlphaNumeric(peek())) advance();
+        while (isAlphaNumeric(getCurrentChar())) moveToNextChar();
 
         String text = source.substring(start, current);
         TokenType type = keywords.get(text);
@@ -110,23 +110,23 @@ public class Scanner {
     }
 
     private void number() {
-        while(isDigit(peek())) advance();
+        while(isDigit(getCurrentChar())) moveToNextChar();
 
         // Look for a fractional part.
-        if (peek() == '.' && isDigit(peekNext())) {
+        if (getCurrentChar() == '.' && isDigit(getNextChar())) {
             // Consume the "."
-            advance();
+            moveToNextChar();
 
-            while (isDigit(peek())) advance();
+            while (isDigit(getCurrentChar())) moveToNextChar();
         }
 
         addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
     }
 
     private void string() {
-        while(peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line++;
-            advance();
+        while(getCurrentChar() != '"' && !isAtEnd()) {
+            if (getCurrentChar() == '\n') line++;
+            moveToNextChar();
         }
 
         if (isAtEnd()) {
@@ -135,14 +135,15 @@ public class Scanner {
         }
 
         // The closing ".
-        advance();
+        moveToNextChar();
 
         // Trim the surrounding quotes.
         String value = source.substring(start + 1, current - 1);
         addToken(TokenType.STRING, value);
     }
 
-    private char advance() {
+    // Renamed advance() > moveToNextChar()
+    private char moveToNextChar() {
         return source.charAt(current++);
     }
 
@@ -155,7 +156,8 @@ public class Scanner {
         tokens.add(new Token(type, text, literal, line));
     }
 
-    private boolean match(char expected) {
+    //Renamed match() > isCurrentCharEqualTo()
+    private boolean isCurrentCharEqualTo(char expected) {
         if (isAtEnd()) return false;
         if (source.charAt(current) != expected) return false;
 
@@ -163,12 +165,14 @@ public class Scanner {
         return true;
     }
 
-    private char peek() {
+    // Renamed peek() > getCurrentChar()
+    private char getCurrentChar() {
         if (isAtEnd()) return '\0';
         return source.charAt(current);
     }
 
-    private char peekNext() {
+    // Renamed peekNext() > getNextChar()
+    private char getNextChar() {
         if (current + 1 >= source.length()) return '\0';
         return source.charAt(current + 1);
     }

@@ -32,6 +32,10 @@ public class GenerateAst {
         writer.println();
         writer.println("abstract class " + baseName + " {");
 
+        // Visitor pattern.
+        // https://www.newthinktank.com/2012/11/visitor-design-pattern-tutorial/
+        defineVisitor(writer, baseName, types);
+
         // The AST classes.
         for (String type : types) {
             String className = type.split(":")[0].trim();
@@ -39,11 +43,22 @@ public class GenerateAst {
             defineType(writer, baseName, className, fields);
         }
 
-        // Visitor pattern.
-        // https://www.newthinktank.com/2012/11/visitor-design-pattern-tutorial/
+        writer.println();
+        writer.println("    abstract <R> R accept(Visitor<R> visitor);");
 
         writer.println("}");
         writer.close();
+    }
+
+    private static void defineVisitor(PrintWriter writer, String baseName, List<String> types) {
+        writer.println("    interface Visitor<R> {");
+
+        for (String type : types) {
+            String typeName = type.split(":")[0].trim();
+            writer.println("        R visit" + typeName + baseName + "(" + typeName + " " + baseName.toLowerCase() + ");");
+        }
+
+        writer.println("    }");
     }
 
     private static void defineType(PrintWriter writer, String baseName, String className, String fieldList) {
@@ -66,6 +81,14 @@ public class GenerateAst {
         }
 
         writer.println("        }");
+
+        // Visitor pattern.
+        writer.println();
+        writer.println("        @Override");
+        writer.println("        <R> R accept(Visitor<R> visitor) {");
+        writer.println("            return visitor.visit" + className + baseName + "(this);");
+        writer.println("        }");
+
         writer.println("    }");
     }
 }
