@@ -15,15 +15,41 @@ public class GenerateAst {
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
+
+                // A binary expression looks like:
+                // expression operator expression
                 "Binary     :   Expr left, Token operator, Expr right",
+
+                // A grouping expression looks like:
+                // "(" expression ")"
                 "Grouping   :   Expr expression",
+
+                // A literal expression looks like:
+                // NUMBER | STRING | "true" | "false" | "nil"
                 "Literal    :   Object value",
-                "Unary      :   Token operator, Expr right"
+
+                // A unary expression looks like:
+                // ( "-" | "!" ) expression
+                "Unary      :   Token operator, Expr right",
+
+                // A variable expression (for accessing a variable) looks like:
+                // IDENTIFIER
+                "Variable   :   Token name"
         ));
 
         defineAst(outputDir, "Stmt", Arrays.asList(
+
+                // An expression statement looks like:
+                // expression ";"
                 "Expression :   Expr expression",
-                "Print      :   Expr expression"
+
+                // A print statement looks like:
+                // "print" expression ";"
+                "Print      :   Expr expression",
+
+                // The rule for declaring a variable looks like:
+                // "var" IDENTIFIER ( "=" expression )? ";"
+                "Var        :   Token name, Expr initializer"
         ));
     }
 
