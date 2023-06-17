@@ -16,6 +16,11 @@ public class GenerateAst {
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
 
+                // An assignment expression looks like:
+                // IDENTIFIER "=" assignment
+                // eg. makeList().head.next = node;
+                "Assign     : Token name, Expr value",
+
                 // A binary expression looks like:
                 // expression operator expression
                 "Binary     :   Expr left, Token operator, Expr right",

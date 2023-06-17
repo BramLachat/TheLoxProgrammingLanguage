@@ -65,7 +65,28 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (currentTokenMatches(TokenType.EQUAL)) {
+            Token equals = previousToken();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            // If the left-hand side expression isn’t a valid assignment target,
+            // we fail with a syntax error. That ensures we report an error on code like this:
+            // a + b = c;
+            error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
     }
 
     private Expr equality() {
