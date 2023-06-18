@@ -52,6 +52,10 @@ public class GenerateAst {
                 // expression ";"
                 "Expression :   Expr expression",
 
+                // An if statement looks like:
+                // "if" "(" expression ")" statement ( "else" statement )?
+                "If         :   Expr condition, Stmt thenBranch, Stmt elseBranch",
+
                 // A print statement looks like:
                 // "print" expression ";"
                 "Print      :   Expr expression",
