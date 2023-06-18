@@ -44,6 +44,10 @@ public class GenerateAst {
 
         defineAst(outputDir, "Stmt", Arrays.asList(
 
+                // A block statement looks like:
+                // "{" declaration* "}"
+                "Block      :   List<Stmt> statements",
+
                 // An expression statement looks like:
                 // expression ";"
                 "Expression :   Expr expression",

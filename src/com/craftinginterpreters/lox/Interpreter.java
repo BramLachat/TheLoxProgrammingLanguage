@@ -149,6 +149,19 @@ public class Interpreter implements Expr.Visitor<Object>,
         stmt.accept(this);
     }
 
+    private void executeBlock(List<Stmt> statements, Environment environment) {
+        Environment previous = this.environment;
+        try {
+            this.environment = environment;
+
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
+    }
+
     /*
      * Unlike expressions, statements produce no values,
      * so the return type of the visit methods is Void, not Object.
@@ -177,5 +190,9 @@ public class Interpreter implements Expr.Visitor<Object>,
         return null;
     }
 
-
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment((environment)));
+        return null;
+    }
 }
