@@ -33,6 +33,10 @@ public class GenerateAst {
                 // NUMBER | STRING | "true" | "false" | "nil"
                 "Literal    :   Object value",
 
+                // A logical expression looks like:
+                // expression ( "and" | "or" ) expression
+                "Logical : Expr left, Token operator, Expr right",
+
                 // A unary expression looks like:
                 // ( "-" | "!" ) expression
                 "Unary      :   Token operator, Expr right",

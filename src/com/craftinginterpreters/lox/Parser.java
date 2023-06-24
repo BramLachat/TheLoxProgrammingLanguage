@@ -96,7 +96,7 @@ public class Parser {
     }
 
     private Expr assignment() {
-        Expr expr = equality();
+        Expr expr = or();
 
         if (currentTokenMatches(TokenType.EQUAL)) {
             Token equals = previousToken();
@@ -111,6 +111,30 @@ public class Parser {
             // we fail with a syntax error. That ensures we report an error on code like this:
             // a + b = c;
             error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
+    }
+
+    private Expr or() {
+        Expr expr = and();
+
+        while (currentTokenMatches(TokenType.OR)) {
+            Token operator = previousToken();
+            Expr right = and();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr and() {
+        Expr expr = equality();
+
+        while (currentTokenMatches(TokenType.AND)) {
+            Token operator = previousToken();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
         }
 
         return expr;
