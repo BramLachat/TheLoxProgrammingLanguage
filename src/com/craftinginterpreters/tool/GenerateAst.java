@@ -66,7 +66,11 @@ public class GenerateAst {
 
                 // The rule for declaring a variable looks like:
                 // "var" IDENTIFIER ( "=" expression )? ";"
-                "Var        :   Token name, Expr initializer"
+                "Var        :   Token name, Expr initializer",
+
+                // A while statement looks like:
+                // "while" "(" expression ")" statement
+                "While : Expr condition, Stmt body"
         ));
     }
 
