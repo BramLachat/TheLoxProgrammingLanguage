@@ -1,6 +1,7 @@
 package com.craftinginterpreters.lox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // The purpose of the Parser is to take a list of tokens as input
@@ -48,11 +49,57 @@ public class Parser {
     }
 
     private Stmt statement() {
+        if (currentTokenMatches(TokenType.FOR)) return forStatement();
         if (currentTokenMatches(TokenType.IF)) return ifStatement();
         if (currentTokenMatches(TokenType.PRINT)) return printStatement();
         if (currentTokenMatches(TokenType.WHILE)) return whileStatement();
         if (currentTokenMatches(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
+    }
+
+    private Stmt forStatement() {
+        consumeTokenOrThrow(TokenType.LEFT_PAREN, "Expect '(' after 'for'.");
+
+        Stmt initializer;
+        if (currentTokenMatches(TokenType.SEMICOLON)) {
+            initializer = null;
+        } else if (currentTokenMatches(TokenType.VAR)) {
+            initializer = varDeclaration();
+        } else {
+            initializer = expressionStatement();
+        }
+
+        Expr condition = null;
+        if (!isCurrentTokenOfType(TokenType.SEMICOLON)) {
+            condition = expression();
+        }
+        consumeTokenOrThrow(TokenType.SEMICOLON, "Expect ';' after loop condition.");
+
+        Expr increment = null;
+        if (!isCurrentTokenOfType(TokenType.RIGHT_PAREN)) {
+            increment = expression();
+        }
+        consumeTokenOrThrow(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.");
+
+        Stmt body = statement();
+
+        if (increment != null) {
+            body = new Stmt.Block(
+                    Arrays.asList(
+                            body,
+                            new Stmt.Expression(increment)
+                    )
+            );
+        }
+
+        if (condition == null) condition = new Expr.Literal(true);
+        body = new Stmt.While(condition, body);
+
+        if (initializer != null) {
+            body = new Stmt.Block(Arrays.asList(initializer, body));
+        }
+
+        return body;
     }
 
     private Stmt ifStatement() {
