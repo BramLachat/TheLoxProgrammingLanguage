@@ -8,7 +8,35 @@ import java.util.ArrayList;
 public class Interpreter implements Expr.Visitor<Object>,
                                     Stmt.Visitor<Void> {
 
-    private Environment environment = new Environment();
+    final Environment globals = new Environment();
+    private Environment environment = globals;
+
+    public Interpreter() {
+        // TODO: move to separate class?
+        /**
+         * This defines a variable named “clock”.
+         * Its value is a Java anonymous class that implements LoxCallable.
+         * The clock() function takes no arguments, so its arity is zero.
+         * The implementation of call() calls the corresponding Java function
+         * and converts the result to a double value in seconds.
+         */
+        globals.define("clock", new LoxCallable() {
+            @Override
+            public int arity() {
+                return 0;
+            }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                return (double) System.currentTimeMillis() / 1000.0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native fn>";
+            }
+        });
+    }
 
     public void interpret(List<Stmt> statements) {
         try {
