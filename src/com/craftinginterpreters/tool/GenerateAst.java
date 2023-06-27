@@ -25,6 +25,10 @@ public class GenerateAst {
                 // expression operator expression
                 "Binary     :   Expr left, Token operator, Expr right",
 
+                // A function call expression looks like:
+                // primary ( "(" arguments? ")" )*
+                "Call : Expr callee, Token paren, List<Expr> arguments",
+
                 // A grouping expression looks like:
                 // "(" expression ")"
                 "Grouping   :   Expr expression",

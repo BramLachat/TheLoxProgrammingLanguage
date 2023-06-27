@@ -1,6 +1,7 @@
 package com.craftinginterpreters.lox;
 
 import java.util.List;
+import java.util.ArrayList;
 
 // The purpose of the Interpreter is to take an AST as input
 // and calculate the result value
@@ -64,6 +65,35 @@ public class Interpreter implements Expr.Visitor<Object>,
 
         // Unreachable.
         return null;
+    }
+
+    @Override
+    public Object visitCallExpr(Expr.Call expr) {
+        Object callee = evaluate(expr.callee);
+
+        List<Object> arguments = new ArrayList<>();
+        for (Expr argument : expr.arguments) {
+            arguments.add(evaluate(argument));
+        }
+
+        if (!(callee instanceof LoxCallable)) {
+            throw new RuntimeError(expr.paren, "Can only call functions and classes.");
+        }
+
+        LoxCallable function = (LoxCallable) callee;
+
+        /**
+         * We could push the arity checking into the concrete implementation
+         * of call(). But, since we’ll have multiple classes implementing
+         * LoxCallable, that would end up with redundant validation spread across
+         * a few classes. Hoisting it up into the visit method lets us do it
+         * in one place.
+         */
+        if (arguments.size() != function.arity()) {
+            throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguemnts but got " + arguments.size() + ".");
+        }
+
+        return function.call(this, arguments);
     }
 
     @Override
