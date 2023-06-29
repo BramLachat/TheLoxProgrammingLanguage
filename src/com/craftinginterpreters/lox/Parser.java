@@ -73,6 +73,7 @@ public class Parser {
         if (currentTokenMatches(TokenType.FOR)) return forStatement();
         if (currentTokenMatches(TokenType.IF)) return ifStatement();
         if (currentTokenMatches(TokenType.PRINT)) return printStatement();
+        if (currentTokenMatches(TokenType.RETURN)) return returnStatement();
         if (currentTokenMatches(TokenType.WHILE)) return whileStatement();
         if (currentTokenMatches(TokenType.LEFT_BRACE)) return new Stmt.Block(block());
         return expressionStatement();
@@ -141,6 +142,17 @@ public class Parser {
         Expr value = expression();
         consumeTokenOrThrow(TokenType.SEMICOLON, "Expect ';' after expression.");
         return new Stmt.Print(value);
+    }
+
+    private Stmt returnStatement() {
+        Token keyword = previousToken();
+        Expr value = null;
+        if (!isCurrentTokenOfType(TokenType.SEMICOLON)) {
+            value = expression();
+        }
+
+        consumeTokenOrThrow(TokenType.SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
     }
 
     private Stmt whileStatement() {

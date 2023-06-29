@@ -72,6 +72,10 @@ public class GenerateAst {
                 // "print" expression ";"
                 "Print      :   Expr expression",
 
+                // A return statement looks like:
+                // "return" expression ";"
+                "Return : Token keyword, Expr value",
+
                 // The rule for declaring a variable looks like:
                 // "var" IDENTIFIER ( "=" expression )? ";"
                 "Var        :   Token name, Expr initializer",
