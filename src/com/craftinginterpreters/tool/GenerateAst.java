@@ -60,6 +60,10 @@ public class GenerateAst {
                 // expression ";"
                 "Expression :   Expr expression",
 
+                // A function statement looks like:
+                // IDENTIFIER "(" parameters? ")" block
+                "Function : Token name, List<Token> params, List<Stmt> body",
+
                 // An if statement looks like:
                 // "if" "(" expression ")" statement ( "else" statement )?
                 "If         :   Expr condition, Stmt thenBranch, Stmt elseBranch",
