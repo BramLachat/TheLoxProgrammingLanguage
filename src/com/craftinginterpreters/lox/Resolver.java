@@ -171,6 +171,10 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         if (scopes.isEmpty()) return;
 
         Map<String, Boolean> scope = scopes.peek();
+        if (scope.containsKey(name.lexeme)) {
+            Lox.error(name, "Already a variable with this name in this scope.");
+        }
+
         // We mark it as “not ready yet” by binding its name to false in the scope map.
         // The value associated with a key in the scope map represents whether or not
         // we have finished resolving that variable’s initializer.
