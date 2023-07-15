@@ -1,7 +1,9 @@
 package com.craftinginterpreters.lox;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 // The purpose of the Interpreter is to take an AST as input
 // and calculate the result value
@@ -10,6 +12,7 @@ public class Interpreter implements Expr.Visitor<Object>,
 
     final Environment globals = new Environment();
     private Environment environment = globals;
+    private final Map<Expr, Integer> locals = new HashMap<>();
 
     public Interpreter() {
         // TODO: move to separate class?
@@ -218,6 +221,10 @@ public class Interpreter implements Expr.Visitor<Object>,
 
     private void execute(Stmt stmt) {
         stmt.accept(this);
+    }
+
+    void resolve(Expr expr, int depth) {
+        locals.put(expr, depth);
     }
 
     protected void executeBlock(List<Stmt> statements, Environment environment) {
