@@ -19,7 +19,7 @@ public class GenerateAst {
                 // An assignment expression looks like:
                 // IDENTIFIER "=" assignment
                 // eg. makeList().head.next = node;
-                "Assign     : Token name, Expr value",
+                "Assign     :   Token name, Expr value",
 
                 // A binary expression looks like:
                 // expression operator expression
@@ -27,7 +27,7 @@ public class GenerateAst {
 
                 // A function call expression looks like:
                 // primary ( "(" arguments? ")" )*
-                "Call : Expr callee, Token paren, List<Expr> arguments",
+                "Call       :   Expr callee, Token paren, List<Expr> arguments",
 
                 // A grouping expression looks like:
                 // "(" expression ")"
@@ -39,7 +39,7 @@ public class GenerateAst {
 
                 // A logical expression looks like:
                 // expression ( "and" | "or" ) expression
-                "Logical : Expr left, Token operator, Expr right",
+                "Logical    :   Expr left, Token operator, Expr right",
 
                 // A unary expression looks like:
                 // ( "-" | "!" ) expression
@@ -56,13 +56,17 @@ public class GenerateAst {
                 // "{" declaration* "}"
                 "Block      :   List<Stmt> statements",
 
+                // A class statement looks like:
+                // "class" IDENTIFIER "{" function* "}"
+                "Class      :   Token name, List<Stmt.Function> methods",
+
                 // An expression statement looks like:
                 // expression ";"
                 "Expression :   Expr expression",
 
                 // A function statement looks like:
                 // IDENTIFIER "(" parameters? ")" block
-                "Function : Token name, List<Token> params, List<Stmt> body",
+                "Function   :   Token name, List<Token> params, List<Stmt> body",
 
                 // An if statement looks like:
                 // "if" "(" expression ")" statement ( "else" statement )?
@@ -74,7 +78,7 @@ public class GenerateAst {
 
                 // A return statement looks like:
                 // "return" expression ";"
-                "Return : Token keyword, Expr value",
+                "Return     :   Token keyword, Expr value",
 
                 // The rule for declaring a variable looks like:
                 // "var" IDENTIFIER ( "=" expression )? ";"
@@ -82,7 +86,7 @@ public class GenerateAst {
 
                 // A while statement looks like:
                 // "while" "(" expression ")" statement
-                "While : Expr condition, Stmt body"
+                "While      :   Expr condition, Stmt body"
         ));
     }
 

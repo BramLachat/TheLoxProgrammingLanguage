@@ -27,6 +27,7 @@ public class Parser {
 
     private Stmt declaration() {
         try {
+            if (currentTokenMatches(TokenType.CLASS)) return classDeclaration();
             if (currentTokenMatches(TokenType.FUN)) return function("function");
             if (currentTokenMatches(TokenType.VAR)) return varDeclaration();
 
@@ -35,6 +36,20 @@ public class Parser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt classDeclaration() {
+        Token name = consumeTokenOrThrow(TokenType.IDENTIFIER, "Expect class name.");
+        consumeTokenOrThrow(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!isCurrentTokenOfType(TokenType.RIGHT_BRACE) && !isAtEnd()) {
+            methods.add(function("method"));
+        }
+
+        consumeTokenOrThrow(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+
+        return new Stmt.Class(name, methods);
     }
 
     private Stmt.Function function(String kind) {
