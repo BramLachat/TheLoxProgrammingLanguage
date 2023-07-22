@@ -210,6 +210,9 @@ public class Parser {
             if (expr instanceof Expr.Variable) {
                 Token name = ((Expr.Variable) expr).name;
                 return new Expr.Assign(name, value);
+            } else if (expr instanceof Expr.Get) {
+                Expr.Get get = (Expr.Get) expr;
+                return new Expr.Set(get.object, get.name, value);
             }
 
             // If the left-hand side expression isn’t a valid assignment target,
@@ -318,6 +321,9 @@ public class Parser {
         while (true) {
             if (currentTokenMatches(TokenType.LEFT_PAREN)) {
                 expr = finishCall(expr);
+            } else if (currentTokenMatches(TokenType.DOT)) {
+                Token name = consumeTokenOrThrow(TokenType.IDENTIFIER, "Expect property name after '.'.");
+                expr = new Expr.Get(expr, name);
             } else {
                 break;
             }

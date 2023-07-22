@@ -50,6 +50,18 @@ public class AstPrinter implements Expr.Visitor<String> {
         return null;
     }
 
+    @Override
+    public String visitGetExpr(Expr.Get expr) {
+        System.err.println("TODO > Implement 'visitGetExpr' in 'AstPrinter'.");
+        return null;
+    }
+
+    @Override
+    public String visitSetExpr(Expr.Set expr) {
+        System.err.println("TODO > Implement 'visitSetExpr' in 'AstPrinter'.");
+        return null;
+    }
+
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
         builder.append("(").append(name);

@@ -29,6 +29,10 @@ public class GenerateAst {
                 // primary ( "(" arguments? ")" )*
                 "Call       :   Expr callee, Token paren, List<Expr> arguments",
 
+                // A "get expression" or "property access" looks like:
+                // primary ( "(" arguments? ")" | "." IDENTIFIER )*
+                "Get        :   Expr object, Token name",
+
                 // A grouping expression looks like:
                 // "(" expression ")"
                 "Grouping   :   Expr expression",
@@ -40,6 +44,10 @@ public class GenerateAst {
                 // A logical expression looks like:
                 // expression ( "and" | "or" ) expression
                 "Logical    :   Expr left, Token operator, Expr right",
+
+                // A "set expression" or "property assignment" looks like:
+                // ( call "." )? IDENTIFIER "=" assignment
+                "Set        :   Expr object, Token name, Expr value",
 
                 // A unary expression looks like:
                 // ( "-" | "!" ) expression
