@@ -357,6 +357,10 @@ public class Parser {
             return new Expr.Literal(previousToken().literal);
         }
 
+        if (currentTokenMatches(TokenType.THIS)) {
+            return new Expr.This(previousToken());
+        }
+
         if (currentTokenMatches(TokenType.IDENTIFIER)) {
             return new Expr.Variable(previousToken());
         }

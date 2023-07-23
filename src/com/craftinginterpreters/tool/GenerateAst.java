@@ -49,6 +49,8 @@ public class GenerateAst {
                 // ( call "." )? IDENTIFIER "=" assignment
                 "Set        :   Expr object, Token name, Expr value",
 
+                "This       :   Token keyword",
+
                 // A unary expression looks like:
                 // ( "-" | "!" ) expression
                 "Unary      :   Token operator, Expr right",
