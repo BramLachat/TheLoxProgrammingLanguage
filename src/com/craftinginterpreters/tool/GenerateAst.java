@@ -49,6 +49,10 @@ public class GenerateAst {
                 // ( call "." )? IDENTIFIER "=" assignment
                 "Set        :   Expr object, Token name, Expr value",
 
+                // A super expression looks like:
+                // "super" "." IDENTIFIER
+                "Super      :   Token keyword, Token method",
+
                 "This       :   Token keyword",
 
                 // A unary expression looks like:

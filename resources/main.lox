@@ -77,6 +77,7 @@ class Bacon {
 
 Bacon().eat(); // Prints "Crunch crunch crunch!".
 
+// 13.2
 class Doughnut {
   cook() {
     print "Fry until golden brown.";
@@ -84,5 +85,21 @@ class Doughnut {
 }
 
 class BostonCream < Doughnut {}
+
+BostonCream().cook();
+
+// 13.3
+class Doughnut {
+  cook() {
+    print "Fry until golden brown.";
+  }
+}
+
+class BostonCream < Doughnut {
+  cook() {
+    super.cook();
+    print "Pipe full of custard and coat with chocolate.";
+  }
+}
 
 BostonCream().cook();
