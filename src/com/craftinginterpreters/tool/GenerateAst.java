@@ -67,8 +67,8 @@ public class GenerateAst {
                 "Block      :   List<Stmt> statements",
 
                 // A class statement looks like:
-                // "class" IDENTIFIER "{" function* "}"
-                "Class      :   Token name, List<Stmt.Function> methods",
+                // "class" IDENTIFIER ( "<" IDENTIFIER )? "{" function* "}"
+                "Class      :   Token name, Expr.Variable superclass, List<Stmt.Function> methods",
 
                 // An expression statement looks like:
                 // expression ";"
