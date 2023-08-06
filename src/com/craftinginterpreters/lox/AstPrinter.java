@@ -1,7 +1,19 @@
 package com.craftinginterpreters.lox;
 
-public class AstPrinter implements Expr.Visitor<String> {
-    String print(Expr expr) {
+import java.util.List;
+
+public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
+    private List<Stmt> statements;
+
+    public AstPrinter(List<Stmt> statements) {
+        this.statements = statements;
+    }
+
+    public String print() {
+        return null;
+    }
+
+    private String print(Expr expr) {
         return expr.accept(this);
     }
 
@@ -71,6 +83,51 @@ public class AstPrinter implements Expr.Visitor<String> {
     @Override
     public String visitSuperExpr(Expr.Super expr) {
         System.err.println("TODO > Implement 'visitSuperExpr' in 'AstPrinter'.");
+        return null;
+    }
+
+    @Override
+    public String visitBlockStmt(Stmt.Block stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitClassStmt(Stmt.Class stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitExpressionStmt(Stmt.Expression stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitFunctionStmt(Stmt.Function stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitIfStmt(Stmt.If stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitPrintStmt(Stmt.Print stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitReturnStmt(Stmt.Return stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitVarStmt(Stmt.Var stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitWhileStmt(Stmt.While stmt) {
         return null;
     }
 
