@@ -73,8 +73,11 @@ public class Lox {
         // Stop if there was a resolution error.
         if (hadError) return;
 
-        AstPrinter astPrinter = new AstPrinter(statements);
-        astPrinter.print();
+        AstPrinter astPrinter = new AstPrinter();
+        astPrinter.print(statements);
+
+//        AstPrinter astPrinter = new AstPrinter(statements);
+//        astPrinter.print();
 
         // TODO > Question > Why is interpreter static field and scanner and parser not?
         interpreter.interpret(statements);
