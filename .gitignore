@@ -3,3 +3,6 @@ out/
 /.vs
 *.iml
 *.class
+*.s
+*.i
+*.o
