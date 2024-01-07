@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "common.h"
+#include "compiler.h"
 #include "vm.h"
 #include "debug.h"
 
@@ -23,6 +24,11 @@ void initVM() {
 
 void freeVM() {
 
+}
+
+InterpretResult interpret(const char* source) {
+    compile(source);
+    return INTERPRET_OK;
 }
 
 static InterpretResult run() {
