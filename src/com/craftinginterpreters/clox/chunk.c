@@ -3,7 +3,7 @@
 #include "chunk.h"
 #include "memory.h"
 
-void initChunk(Chunk* chunk) {
+void initchunk(Chunk* chunk) {
     chunk->count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;
