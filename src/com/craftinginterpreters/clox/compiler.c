@@ -106,6 +106,11 @@ static void endCompiler() {
     emitReturn();
 }
 
+static void grouping() {
+    expression();
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
+}
+
 static void number() {
     // Use the C standard library to convert the lexeme string to a double value.
     double value = strtod(parser.previous.start, NULL);
