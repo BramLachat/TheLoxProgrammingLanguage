@@ -42,6 +42,11 @@ typedef struct {
 Parser parser;
 Chunk* compilingChunk;
 
+// This is what happens when you write your VM in a language that was designed to be compiled on a PDP-11.
+static void expression();
+static ParseRule* getRule(TokenType type);
+static void parsePrecedence(Precedence precedence);
+
 static Chunk* currentChunk() {
     return compilingChunk;
 }
@@ -68,19 +73,6 @@ static void error(const char* message) {
 
 static void errorAtCurrent(const char* message) {
     errorAt(&parser.current, message);
-}
-
-bool compile(const char* source, Chunk* chunk) {
-    initScanner(source);
-
-    parser.hadError = false;
-    parser.panicMode = false;
-    
-    advance();
-    expression();
-    consume(TOKEN_EOF, "Expect end of expression.");
-    endCompiler();
-    return !parser.hadError;
 }
 
 static void advance() {
@@ -139,10 +131,18 @@ static void endCompiler() {
 #endif
 }
 
-// This is what happens when you write your VM in a language that was designed to be compiled on a PDP-11.
-static void expression();
-static ParseRule* getRule(TokenType type);
-static void parsePrecedence(Precedence precedence);
+bool compile(const char* source, Chunk* chunk) {
+    initScanner(source);
+
+    parser.hadError = false;
+    parser.panicMode = false;
+    
+    advance();
+    expression();
+    consume(TOKEN_EOF, "Expect end of expression.");
+    endCompiler();
+    return !parser.hadError;
+}
 
 static void binary() {
     TokenType operatorType = parser.previous.type;
@@ -223,7 +223,7 @@ ParseRule rules[] = {
     [TOKEN_WHILE]               = {NULL,        NULL,       PREC_NONE},
     [TOKEN_ERROR]               = {NULL,        NULL,       PREC_NONE},
     [TOKEN_EOF]                 = {NULL,        NULL,       PREC_NONE},
-}
+};
 
 static void parsePrecedence(Precedence precedence) {
     advance();

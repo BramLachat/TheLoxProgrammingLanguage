@@ -21,7 +21,7 @@ void initScanner(const char *source)
 }
 
 static bool isAlpha(char c) {
-    return (c >= 'a' && c <= "z") || (c >= 'A' && c <= 'Z') || c == '_';
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
 static bool isDigit(char c) {
@@ -46,6 +46,25 @@ static Token errorToken(const char *message)
     token.length = (int)strlen(message);
     token.line = scanner.line;
     return token;
+}
+
+static bool isAtEnd()
+{
+    return *scanner.current == '\0';
+}
+
+static char advance() {
+    scanner.current++;
+    return scanner.current[-1];
+}
+
+static char peek() {
+    return *scanner.current;
+}
+
+static char peekNext() {
+    if (isAtEnd()) return '\0';
+    return scanner.current[1];
 }
 
 static void skipWhitespace() {
@@ -149,25 +168,6 @@ static Token string() {
     // The closing quote.
     advance();
     return makeToken(TOKEN_STRING);
-}
-
-static bool isAtEnd()
-{
-    return *scanner.current == '\0';
-}
-
-static char advance() {
-    scanner.current++;
-    return scanner.current[-1];
-}
-
-static char peek() {
-    return *scanner.current;
-}
-
-static char peekNext() {
-    if (isAtEnd()) return '\0';
-    return scanner.current[1];
 }
 
 static bool match(char expected) {
