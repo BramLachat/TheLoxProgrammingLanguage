@@ -167,7 +167,7 @@ static void grouping() {
 static void number() {
     // Use the C standard library to convert the lexeme string to a double value.
     double value = strtod(parser.previous.start, NULL);
-    emitConstant(value);
+    emitConstant(NUMBER_VAL(value));
 }
 
 static void unary() {
