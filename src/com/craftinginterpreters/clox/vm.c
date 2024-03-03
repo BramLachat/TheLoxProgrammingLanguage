@@ -76,10 +76,16 @@ static InterpretResult run() {
                 push(constant);
                 break;
             }
+            case OP_NIL: push(NIL_VAL); break;
+            case OP_TRUE: push(BOOL_VAL(true)); break;
+            case OP_FALSE: push(BOOL_VAL(false)); break;
             case OP_ADD: BINARY_OP(NUMBER_VAL, +); break;
             case OP_SUBSTRACT: BINARY_OP(NUMBER_VAL, -); break;
             case OP_MULTIPLY: BINARY_OP(NUMBER_VAL, *); break;
             case OP_DEVIDE: BINARY_OP(NUMBER_VAL, /); break;
+            case OP_NOT: 
+                push(BOOL_VAL(isFalsy(pop())));
+                break;
             case OP_NEGATE: 
                 if (!IS_NUMBER(peek(0))) {
                     runtimeError("Operand must be a number.");
@@ -131,4 +137,8 @@ Value pop() {
 static Value peek(int distance) {
     // The distance argument is how far down from the top of the stack to look: zero is the top, one is one slot down, etc.
     return vm.stackTop[-1 - distance];
+}
+
+static bool isFalsy(Value value) {
+    return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
