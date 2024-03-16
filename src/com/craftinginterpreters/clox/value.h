@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-typedef struct Obj obj;
+typedef struct Obj Obj;
 typedef struct ObjString ObjString;
 
 typedef enum {
