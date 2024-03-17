@@ -60,10 +60,11 @@ static void concatenate() {
 
 void initVM() {
     resetStack();
+    vm.objects = NULL;
 }
 
 void freeVM() {
-
+    freeObjects();
 }
 
 static InterpretResult run() {
