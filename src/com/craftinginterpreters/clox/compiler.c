@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -130,6 +131,18 @@ static void emitByte(uint8_t byte) {
 static void emitBytes(uint8_t byte1, uint8_t byte2) {
     emitByte(byte1);
     emitByte(byte2);
+}
+
+static void emitLoop(int loopstart) {
+    emitByte(OP_LOOP);
+
+    // The + 2 is to take into account the size of the OP_LOOP instruction’s own operands which we also need to jump over.
+    int offset = currentChunk()->count - loopstart + 2;
+    if (offset > UINT16_MAX) error("Loop body too large.");
+
+    // Pack a signed 16-bit integer into two bytes.
+    emitByte((offset >> 8) & 0xff);
+    emitByte(offset & 0xff);
 }
 
 static int emitJump(uint8_t instruction) {
@@ -515,6 +528,21 @@ static void printStatement() {
     emitByte(OP_PRINT);
 }
 
+static void whileStatement() {
+    int loopstart = currentChunk()->count;
+    consume(TOKEN_LEFT_PAREN, "Expect '(' afther 'while'.");
+    expression();
+    consume(TOKEN_RIGHT_PAREN, "Expect ')' after condition.");
+
+    int exitJump = emitJump(OP_JUMP_IF_FALSE);
+    emitByte(OP_POP);
+    statement();
+    emitLoop(loopstart);
+
+    patchJump(exitJump);
+    emitByte(OP_POP);
+}
+
 static void synchronize() {
     parser.panicMode = false;
 
@@ -554,6 +582,8 @@ static void statement() {
         printStatement();
     } else if (match(TOKEN_IF)) {
         ifStatement();
+    } else if (match(TOKEN_WHILE)) {
+        whileStatement();
     } else if (match(TOKEN_LEFT_BRACE)) {
         beginScope();
         block();
