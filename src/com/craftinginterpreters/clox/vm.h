@@ -5,7 +5,6 @@
 #include "object.h"
 #include "table.h"
 #include "value.h"
-#include <cstdint>
 
 #define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
 #define FRAMES_MAX 64
