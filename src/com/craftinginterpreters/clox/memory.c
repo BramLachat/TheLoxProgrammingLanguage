@@ -23,6 +23,8 @@ static void freeObject(Obj* object) {
     // including even the surrounding function whose constant table contains it. 
     // Tracking that sounds tricky, and it is! That’s why we’ll write a garbage collector soon to manage it for us.
     case OBJ_CLOSURE: {
+      ObjClosure* closure = (ObjClosure*)object;
+      FREE_ARRAY(ObjUpvalue*, closure->upvalues, closure->upvalueCount);
       FREE(ObjClosure, object);
       break;
     }
@@ -40,6 +42,10 @@ static void freeObject(Obj* object) {
       ObjString* string = (ObjString*)object;
       FREE_ARRAY(char, string->chars, string->length + 1);
       FREE(ObjString, object);
+      break;
+    }
+    case OBJ_UPVALUE: {
+      FREE(ObjUpvalue, object);
       break;
     }
   }
